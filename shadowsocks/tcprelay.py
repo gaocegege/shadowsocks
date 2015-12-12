@@ -223,6 +223,7 @@ class TCPRelayHandler(object):
         return True
 
     def _handle_stage_connecting(self, data):
+        # logging.info("The Data: %s" % data)
         if self._is_local:
             data = self._encryptor.encrypt(data)
         self._data_to_write_to_remote.append(data)
@@ -420,6 +421,7 @@ class TCPRelayHandler(object):
         elif (is_local and self._stage == STAGE_ADDR) or \
                 (not is_local and self._stage == STAGE_INIT):
             self._handle_stage_addr(data)
+        logging.info("data from the local read: %s" % common.to_str(data))
 
     def _on_remote_read(self):
         # handle all remote read events
@@ -439,6 +441,7 @@ class TCPRelayHandler(object):
             data = self._encryptor.decrypt(data)
         else:
             data = self._encryptor.encrypt(data)
+        # logging.info("data from the remote read: %s" % common.to_str(data))
         try:
             self._write_to_sock(data, self._local_sock)
         except Exception as e:
